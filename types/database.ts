@@ -79,10 +79,10 @@ export interface Database {
           id: string
           machine_id: string
           alarm_code: string
-          description: string | null
+          description: string
           cause: string | null
           occurred_at: string
-          status: string
+          status: Database["public"]["Enums"]["alarm_status"]
           created_by: string | null
           closed_by: string | null
           closed_at: string | null
@@ -91,10 +91,10 @@ export interface Database {
           id?: string
           machine_id: string
           alarm_code: string
-          description?: string | null
+          description: string
           cause?: string | null
           occurred_at?: string
-          status?: string
+          status?: Database["public"]["Enums"]["alarm_status"]
           created_by?: string | null
           closed_by?: string | null
           closed_at?: string | null
@@ -103,10 +103,10 @@ export interface Database {
           id?: string
           machine_id?: string
           alarm_code?: string
-          description?: string | null
+          description?: string
           cause?: string | null
           occurred_at?: string
-          status?: string
+          status?: Database["public"]["Enums"]["alarm_status"]
           created_by?: string | null
           closed_by?: string | null
           closed_at?: string | null
@@ -210,6 +210,7 @@ export interface Database {
     Enums: {
       profile_role: "admin" | "technician" | "viewer"
       machine_status: "Running" | "Maintenance" | "Alarm"
+      alarm_status: "Open" | "In Progress" | "Closed"
     }
     CompositeTypes: {
       [_ in never]: never
