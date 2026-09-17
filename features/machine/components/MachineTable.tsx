@@ -5,6 +5,7 @@ import type { Machine, MachineStatus } from "../queries"
 
 const STATUS_STYLES: Record<MachineStatus, string> = {
   Running: "bg-green-100 text-green-800",
+  Stop: "bg-gray-200 text-gray-700",
   Maintenance: "bg-amber-100 text-amber-800",
   Alarm: "bg-red-100 text-red-800",
 }

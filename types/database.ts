@@ -209,7 +209,7 @@ export interface Database {
     }
     Enums: {
       profile_role: "admin" | "technician" | "viewer"
-      machine_status: "Running" | "Maintenance" | "Alarm"
+      machine_status: "Running" | "Stop" | "Maintenance" | "Alarm"
       alarm_status: "Open" | "In Progress" | "Closed"
       mnt_status: "Pending" | "In Progress" | "Done"
     }
