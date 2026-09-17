@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import SimulatorPanel from "@/features/simulator/components/SimulatorPanel"
+import PlcClock from "@/features/simulator/components/PlcClock"
 import { getMachines } from "@/features/machine/queries"
 import ErrorState from "@/components/ui/ErrorState"
 
@@ -31,21 +32,18 @@ export default async function SimulatorPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">PLC Mock Simulator</h1>
-        <p className="mt-1 text-sm text-gray-600">Trigger machine events to simulate PLC signals and test alarm workflows.</p>
+    <div className="scanlines relative -m-4 overflow-hidden bg-[#050810] font-techmono sm:-m-6 lg:-m-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-800 bg-[#050810] px-6 py-4">
+        <div>
+          <h1 className="text-lg font-bold uppercase tracking-widest text-green-400">PLC Control Panel</h1>
+          <p className="mt-1 text-xs text-gray-500">Trigger machine events to simulate PLC signals and test alarm workflows.</p>
+        </div>
+        <PlcClock />
       </div>
 
-      <div role="status" className="flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 shadow-sm">
-        <span className="relative flex h-3 w-3">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
-        </span>
-        <p className="font-mono text-sm font-medium text-slate-200">PLC Mock Simulator — จำลองสัญญาณจาก PLC</p>
+      <div className="px-6 py-8">
+        <SimulatorPanel machines={machines} />
       </div>
-
-      <SimulatorPanel machines={machines} />
     </div>
   )
 }

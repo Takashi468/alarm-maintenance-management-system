@@ -20,13 +20,13 @@ export default async function EditMachinePage({ params }: EditMachinePageProps) 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Edit machine</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Updating <span className="font-mono font-medium">{machine.machine_id}</span> — {machine.machine_name}
+        <h1 className="text-2xl font-bold text-text-primary">Edit machine</h1>
+        <p className="mt-1 text-sm text-text-secondary">
+          Updating <span className="font-mono font-medium text-text-primary">{machine.machine_id}</span> — {machine.machine_name}
         </p>
       </div>
 
-      <div className="max-w-2xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="max-w-2xl rounded-lg border border-border-color bg-bg-secondary p-6 shadow-sm">
         <MachineForm
           action={updateMachine.bind(null, machine.id)}
           initial={{
@@ -39,7 +39,7 @@ export default async function EditMachinePage({ params }: EditMachinePageProps) 
         />
       </div>
 
-      <Link href="/machines" className="text-sm font-medium text-blue-600 hover:text-blue-800">
+      <Link href="/machines" className="text-sm font-medium text-accent-blue hover:brightness-110">
         &larr; Back to machines
       </Link>
     </div>

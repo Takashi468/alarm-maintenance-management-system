@@ -38,8 +38,8 @@ export default function MachineStatusGrid({ summary }: { summary: DashboardSumma
   return (
     <section aria-label="Machine status">
       <div className="mb-3 flex items-baseline justify-between gap-2">
-        <h2 className="text-base font-semibold text-gray-900">Machine status</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-base font-semibold text-text-primary">Machine status</h2>
+        <p className="text-sm text-text-secondary">
           {summary.total_machines} registered machine{summary.total_machines === 1 ? "" : "s"}
         </p>
       </div>

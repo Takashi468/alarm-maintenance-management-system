@@ -26,7 +26,7 @@ interface MaintenanceSummaryProps {
 export default function MaintenanceSummary({ pending, inProgress }: MaintenanceSummaryProps) {
   return (
     <section aria-label="Maintenance backlog">
-      <h2 className="mb-3 text-base font-semibold text-gray-900">Maintenance backlog</h2>
+      <h2 className="mb-3 text-base font-semibold text-text-primary">Maintenance backlog</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
         <SummaryCard label="Pending" value={pending} tone="yellow" icon={<ClockIcon />} />
         <SummaryCard label="In Progress" value={inProgress} tone="blue" icon={<ProgressIcon />} />

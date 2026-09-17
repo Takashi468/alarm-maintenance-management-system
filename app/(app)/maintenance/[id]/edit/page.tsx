@@ -26,14 +26,14 @@ export default async function EditMaintenancePage({ params }: EditMaintenancePag
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Edit maintenance record</h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-text-primary">Edit maintenance record</h1>
+        <p className="mt-1 text-sm text-text-secondary">
           Status is currently{" "}
           <span className="font-medium">{record.status}</span>. Records only move Pending → In Progress → Done.
         </p>
       </div>
 
-      <div className="max-w-2xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="max-w-2xl rounded-lg border border-border-color bg-bg-secondary p-6 shadow-sm">
         <MaintenanceForm
           action={updateMaintenance.bind(null, record.id)}
           machines={machines}
@@ -51,7 +51,7 @@ export default async function EditMaintenancePage({ params }: EditMaintenancePag
         />
       </div>
 
-      <Link href="/maintenance" className="text-sm font-medium text-blue-600 hover:text-blue-800">
+      <Link href="/maintenance" className="text-sm font-medium text-accent-blue hover:brightness-110">
         &larr; Back to maintenance
       </Link>
     </div>

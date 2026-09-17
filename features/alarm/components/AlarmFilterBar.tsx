@@ -30,6 +30,9 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
 
+  const selectClass = "rounded-md border border-border-color bg-bg-tertiary px-3 py-2 text-sm text-text-primary focus:border-accent-blue focus:outline-none focus:ring-1 focus:ring-accent-blue"
+  const inputClass = "rounded-md border border-border-color bg-bg-tertiary px-3 py-2 text-sm text-text-primary focus:border-accent-blue focus:outline-none focus:ring-1 focus:ring-accent-blue"
+
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
       <select
@@ -39,7 +42,7 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
           apply({ machineId: e.target.value, status, dateFrom, dateTo })
         }}
         aria-label="Filter by machine"
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className={selectClass}
       >
         <option value="">All machines</option>
         {machines.map((m) => (
@@ -56,7 +59,7 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
           apply({ machineId, status: e.target.value, dateFrom, dateTo })
         }}
         aria-label="Filter by status"
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className={selectClass}
       >
         <option value="">All statuses</option>
         {ALARM_STATUSES.map((s) => (
@@ -67,7 +70,7 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
       </select>
 
       <div className="flex items-center gap-2">
-        <label htmlFor="date_from" className="text-sm text-gray-600">
+        <label htmlFor="date_from" className="text-sm text-text-secondary">
           From
         </label>
         <input
@@ -78,12 +81,12 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
             setDateFrom(e.target.value)
             apply({ machineId, status, dateFrom: e.target.value, dateTo })
           }}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={inputClass}
         />
       </div>
 
       <div className="flex items-center gap-2">
-        <label htmlFor="date_to" className="text-sm text-gray-600">
+        <label htmlFor="date_to" className="text-sm text-text-secondary">
           To
         </label>
         <input
@@ -94,7 +97,7 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
             setDateTo(e.target.value)
             apply({ machineId, status, dateFrom, dateTo: e.target.value })
           }}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={inputClass}
         />
       </div>
 
@@ -108,7 +111,7 @@ export default function AlarmFilterBar({ machines, initial = {} }: { machines: M
             setDateTo("")
             apply({ machineId: "", status: "", dateFrom: "", dateTo: "" })
           }}
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          className="text-sm font-medium text-accent-blue hover:brightness-110"
         >
           Clear filters
         </button>

@@ -11,7 +11,7 @@ export default function MachineTable({ machines }: { machines: Machine[] }) {
       <EmptyState
         title="No machines found."
         action={
-          <Link href="/machines/new" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+          <Link href="/machines/new" className="rounded-md bg-accent-blue px-4 py-2 text-sm font-semibold text-white hover:brightness-110">
             Add machine
           </Link>
         }
@@ -20,9 +20,9 @@ export default function MachineTable({ machines }: { machines: Machine[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+    <div className="overflow-x-auto rounded-lg border border-border-color bg-bg-secondary">
+      <table className="min-w-full divide-y divide-border-color text-sm">
+        <thead className="bg-bg-tertiary text-left text-xs font-semibold uppercase tracking-wide text-text-secondary">
           <tr>
             <th scope="col" className="px-4 py-3">Machine ID</th>
             <th scope="col" className="px-4 py-3">Name</th>
@@ -32,13 +32,13 @@ export default function MachineTable({ machines }: { machines: Machine[] }) {
             <th scope="col" className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-border-color">
           {machines.map((machine) => (
-            <tr key={machine.id} className="hover:bg-gray-50">
-              <td className="px-4 py-3 font-mono text-xs font-medium text-gray-900">{machine.machine_id}</td>
-              <td className="px-4 py-3 text-gray-900">{machine.machine_name}</td>
-              <td className="px-4 py-3 text-gray-600">{machine.machine_type}</td>
-              <td className="px-4 py-3 text-gray-600">{machine.location}</td>
+            <tr key={machine.id} className="hover:bg-bg-tertiary/50">
+              <td className="px-4 py-3 font-mono text-xs font-medium text-text-primary">{machine.machine_id}</td>
+              <td className="px-4 py-3 text-text-primary">{machine.machine_name}</td>
+              <td className="px-4 py-3 text-text-secondary">{machine.machine_type}</td>
+              <td className="px-4 py-3 text-text-secondary">{machine.location}</td>
               <td className="px-4 py-3">
                 <StatusBadge status={machine.status} />
               </td>
@@ -46,7 +46,7 @@ export default function MachineTable({ machines }: { machines: Machine[] }) {
                 <div className="flex items-center justify-end gap-2">
                   <Link
                     href={`/machines/${machine.id}/edit`}
-                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                    className="rounded-md border border-border-color bg-bg-tertiary px-3 py-1.5 text-sm font-medium text-text-primary hover:brightness-110"
                   >
                     Edit
                   </Link>

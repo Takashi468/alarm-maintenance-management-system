@@ -40,7 +40,7 @@ export default function RoleSelector({
           }}
           disabled={pending}
           aria-label={`Role for ${userLabel}`}
-          className="rounded-md border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-60"
+          className="rounded-md border border-border-color bg-bg-tertiary text-sm text-text-primary focus:border-accent-blue focus:ring-accent-blue disabled:opacity-60"
         >
           {PROFILE_ROLES.map((r) => (
             <option key={r} value={r}>
@@ -52,13 +52,13 @@ export default function RoleSelector({
           type="button"
           onClick={submit}
           disabled={pending || selected === role}
-          className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-md border border-border-color bg-bg-tertiary px-3 py-1.5 text-sm font-medium text-text-primary hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? "Saving..." : "Update"}
         </button>
       </div>
       {error && (
-        <p role="alert" className="text-right text-xs text-red-600">
+        <p role="alert" className="text-right text-xs text-red-400">
           {error}
         </p>
       )}

@@ -18,8 +18,8 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-600">Plant overview at a glance.</p>
+        <h1 className="text-2xl font-bold text-text-primary">Dashboard</h1>
+        <p className="mt-1 text-sm text-text-secondary">Plant overview at a glance.</p>
       </div>
 
       <MachineStatusGrid summary={summary} />
@@ -27,8 +27,8 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <section aria-label="Recent alarms" className="space-y-3 lg:col-span-2">
           <div className="flex items-baseline justify-between gap-2">
-            <h2 className="text-base font-semibold text-gray-900">Recent open alarms</h2>
-            <p className="whitespace-nowrap text-sm text-gray-500">
+            <h2 className="text-base font-semibold text-text-primary">Recent open alarms</h2>
+            <p className="whitespace-nowrap text-sm text-text-secondary">
               {summary.open_alarms} Open · {summary.in_progress_alarms} In Progress
             </p>
           </div>

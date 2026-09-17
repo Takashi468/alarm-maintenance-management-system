@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { ProfileProvider, type Profile } from "@/features/auth/profile-context"
 import Nav from "@/components/ui/Nav"
+import Header from "@/components/ui/Header"
 
 type AppRole = "admin" | "technician" | "viewer"
 
@@ -46,9 +47,12 @@ export default async function AppLayout({
 
   return (
     <ProfileProvider profile={resolvedProfile}>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-bg-primary">
         <Nav items={items} name={resolvedProfile.full_name} role={resolvedProfile.role} />
-        <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+        <div className="pl-64">
+          <Header />
+          <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+        </div>
       </div>
     </ProfileProvider>
   )

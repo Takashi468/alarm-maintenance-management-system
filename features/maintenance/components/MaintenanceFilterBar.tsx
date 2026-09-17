@@ -24,6 +24,8 @@ export default function MaintenanceFilterBar({ machines, initial = {} }: { machi
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }
 
+  const selectClass = "rounded-md border border-border-color bg-bg-tertiary px-3 py-2 text-sm text-text-primary focus:border-accent-blue focus:outline-none focus:ring-1 focus:ring-accent-blue"
+
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
       <select
@@ -33,7 +35,7 @@ export default function MaintenanceFilterBar({ machines, initial = {} }: { machi
           apply({ machineId: e.target.value, status })
         }}
         aria-label="Filter by machine"
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className={selectClass}
       >
         <option value="">All machines</option>
         {machines.map((m) => (
@@ -50,7 +52,7 @@ export default function MaintenanceFilterBar({ machines, initial = {} }: { machi
           apply({ machineId, status: e.target.value })
         }}
         aria-label="Filter by status"
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className={selectClass}
       >
         <option value="">All statuses</option>
         {MNT_STATUSES.map((s) => (
@@ -68,7 +70,7 @@ export default function MaintenanceFilterBar({ machines, initial = {} }: { machi
             setStatus("")
             apply({ machineId: "", status: "" })
           }}
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          className="text-sm font-medium text-accent-blue hover:brightness-110"
         >
           Clear filters
         </button>

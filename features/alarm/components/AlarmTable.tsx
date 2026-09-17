@@ -17,7 +17,7 @@ export default function AlarmTable({ alarms }: { alarms: AlarmWithRelations[] })
       <EmptyState
         title="No alarms found."
         action={
-          <Link href="/alarms/new" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+          <Link href="/alarms/new" className="rounded-md bg-accent-blue px-4 py-2 text-sm font-semibold text-white hover:brightness-110">
             Report alarm
           </Link>
         }
@@ -26,9 +26,9 @@ export default function AlarmTable({ alarms }: { alarms: AlarmWithRelations[] })
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+    <div className="overflow-x-auto rounded-lg border border-border-color bg-bg-secondary">
+      <table className="min-w-full divide-y divide-border-color text-sm">
+        <thead className="bg-bg-tertiary text-left text-xs font-semibold uppercase tracking-wide text-text-secondary">
           <tr>
             <th scope="col" className="px-4 py-3">Occurred</th>
             <th scope="col" className="px-4 py-3">Machine</th>
@@ -39,35 +39,35 @@ export default function AlarmTable({ alarms }: { alarms: AlarmWithRelations[] })
             <th scope="col" className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-border-color">
           {alarms.map((alarm) => (
-            <tr key={alarm.id} className="hover:bg-gray-50">
-              <td className="whitespace-nowrap px-4 py-3 text-gray-600">{formatDateTime(alarm.occurred_at)}</td>
+            <tr key={alarm.id} className="hover:bg-bg-tertiary/50">
+              <td className="whitespace-nowrap px-4 py-3 text-text-secondary">{formatDateTime(alarm.occurred_at)}</td>
               <td className="px-4 py-3">
                 {alarm.machines ? (
                   <>
-                    <span className="font-medium text-gray-900">{alarm.machines.machine_name}</span>{" "}
-                    <span className="font-mono text-xs text-gray-500">{alarm.machines.machine_id}</span>
+                    <span className="font-medium text-text-primary">{alarm.machines.machine_name}</span>{" "}
+                    <span className="font-mono text-xs text-text-secondary">{alarm.machines.machine_id}</span>
                   </>
                 ) : (
-                  <span className="text-gray-400">Unknown machine</span>
+                  <span className="text-text-secondary">Unknown machine</span>
                 )}
               </td>
-              <td className="px-4 py-3 font-mono text-xs text-gray-900">{alarm.alarm_code}</td>
-              <td className="max-w-xs px-4 py-3 text-gray-600">
+              <td className="px-4 py-3 font-mono text-xs text-text-primary">{alarm.alarm_code}</td>
+              <td className="max-w-xs px-4 py-3 text-text-secondary">
                 <span title={alarm.description}>{alarm.description.length > 80 ? alarm.description.slice(0, 80) + "…" : alarm.description}</span>
               </td>
               <td className="px-4 py-3">
                 <StatusBadge status={alarm.status} />
               </td>
-              <td className="max-w-xs px-4 py-3 text-gray-600">
+              <td className="max-w-xs px-4 py-3 text-text-secondary">
                 {alarm.cause ? (
                   <>
                     <span title={alarm.cause}>{alarm.cause.length > 60 ? alarm.cause.slice(0, 60) + "…" : alarm.cause}</span>
-                    {alarm.profiles?.full_name && <span className="ml-1 text-xs text-gray-400">by {alarm.profiles.full_name}</span>}
+                    {alarm.profiles?.full_name && <span className="ml-1 text-xs text-text-secondary/70">by {alarm.profiles.full_name}</span>}
                   </>
                 ) : (
-                  <span className="text-gray-300">—</span>
+                  <span className="text-text-secondary/50">—</span>
                 )}
               </td>
               <td className="whitespace-nowrap px-4 py-3 text-right">

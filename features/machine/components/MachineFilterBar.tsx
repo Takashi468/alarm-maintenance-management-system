@@ -44,13 +44,13 @@ export default function MachineFilterBar({
         onChange={(event) => handleSearchChange(event.target.value)}
         placeholder="Search machine ID or name..."
         aria-label="Search machines"
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:max-w-xs"
+        className="w-full rounded-md border border-border-color bg-bg-tertiary px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary focus:border-accent-blue focus:outline-none focus:ring-1 focus:ring-accent-blue sm:max-w-xs"
       />
       <select
         value={status}
         onChange={(event) => handleStatusChange(event.target.value)}
         aria-label="Filter by status"
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="rounded-md border border-border-color bg-bg-tertiary px-3 py-2 text-sm text-text-primary focus:border-accent-blue focus:outline-none focus:ring-1 focus:ring-accent-blue"
       >
         <option value="">All statuses</option>
         {MACHINE_STATUSES.map((s) => (
@@ -68,7 +68,7 @@ export default function MachineFilterBar({
             setStatus("")
             apply("", "")
           }}
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          className="text-sm font-medium text-accent-blue hover:brightness-110"
         >
           Clear filters
         </button>

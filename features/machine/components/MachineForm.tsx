@@ -53,30 +53,30 @@ export default function MachineForm({
 
   function errorFor(key: MachineFieldKey) {
     return fieldErrors[key] ? (
-      <p role="alert" className="mt-1 text-sm text-red-600">
+      <p role="alert" className="mt-1 text-sm text-red-400">
         {fieldErrors[key]}
       </p>
     ) : null
   }
 
   const inputClass = (key: MachineFieldKey) =>
-    `mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 ${
+    `mt-1 block w-full rounded-md border bg-bg-tertiary px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-1 ${
       fieldErrors[key]
-        ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+        : "border-border-color focus:border-accent-blue focus:ring-accent-blue"
     }`
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {formError && (
-        <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p role="alert" className="rounded-md border border-red-800 bg-red-900/30 px-3 py-2 text-sm text-red-400">
           {formError}
         </p>
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="machine_id" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="machine_id" className="block text-sm font-medium text-text-primary">
             Machine ID *
           </label>
           <input
@@ -88,13 +88,13 @@ export default function MachineForm({
             maxLength={20}
             defaultValue={initial.machine_id ?? ""}
             placeholder="e.g. CNC-01"
-            className={inputClass("machine_id")}
+            className={`${inputClass("machine_id")} font-mono`}
           />
           {errorFor("machine_id")}
         </div>
 
         <div>
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="status" className="block text-sm font-medium text-text-primary">
             Status *
           </label>
           <select id="status" name="status" required defaultValue={initial.status ?? "Running"} className={inputClass("status")}>
@@ -108,7 +108,7 @@ export default function MachineForm({
         </div>
 
         <div>
-          <label htmlFor="machine_name" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="machine_name" className="block text-sm font-medium text-text-primary">
             Machine name *
           </label>
           <input
@@ -124,7 +124,7 @@ export default function MachineForm({
         </div>
 
         <div>
-          <label htmlFor="machine_type" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="machine_type" className="block text-sm font-medium text-text-primary">
             Machine type *
           </label>
           <input
@@ -140,7 +140,7 @@ export default function MachineForm({
         </div>
 
         <div className="sm:col-span-2">
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="location" className="block text-sm font-medium text-text-primary">
             Location *
           </label>
           <input
@@ -159,7 +159,7 @@ export default function MachineForm({
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="w-full rounded-md bg-accent-blue px-4 py-2 text-sm font-semibold text-white hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-secondary disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {pending ? "Saving..." : "Save machine"}
       </button>

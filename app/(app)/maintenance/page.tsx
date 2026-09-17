@@ -36,8 +36,8 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Maintenance</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-text-primary">Maintenance</h1>
+          <p className="mt-1 text-sm text-text-secondary">
             {hasFilters
               ? `Showing ${records.length} ${records.length === 1 ? "result" : "results"}`
               : `${records.length} ${records.length === 1 ? "record" : "records"}`}
@@ -45,7 +45,7 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
         </div>
         <Link
           href="/maintenance/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="rounded-md bg-accent-blue px-4 py-2 text-sm font-semibold text-white hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-primary"
         >
           New Record
         </Link>

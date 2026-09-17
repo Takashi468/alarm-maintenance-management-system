@@ -64,29 +64,29 @@ export default function AlarmForm({
 
   function errorFor(key: FormFieldKey) {
     return fieldErrors[key] ? (
-      <p role="alert" className="mt-1 text-sm text-red-600">
+      <p role="alert" className="mt-1 text-sm text-red-400">
         {fieldErrors[key]}
       </p>
     ) : null
   }
 
   const inputClass = (key: FormFieldKey) =>
-    `mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 ${
+    `mt-1 block w-full rounded-md border bg-bg-tertiary px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-1 ${
       fieldErrors[key]
-        ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+        : "border-border-color focus:border-accent-blue focus:ring-accent-blue"
     }`
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {formError && (
-        <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p role="alert" className="rounded-md border border-red-800 bg-red-900/30 px-3 py-2 text-sm text-red-400">
           {formError}
         </p>
       )}
 
       <div>
-        <label htmlFor="machine_id" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="machine_id" className="block text-sm font-medium text-text-primary">
           Machine *
         </label>
         <select id="machine_id" name="machine_id" required defaultValue="" className={inputClass("machine_id")}>
@@ -104,7 +104,7 @@ export default function AlarmForm({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="alarm_code" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="alarm_code" className="block text-sm font-medium text-text-primary">
             Alarm code *
           </label>
           <input
@@ -114,13 +114,13 @@ export default function AlarmForm({
             required
             defaultValue=""
             placeholder="e.g. E-4501"
-            className={inputClass("alarm_code")}
+            className={`${inputClass("alarm_code")} font-mono`}
           />
           {errorFor("alarm_code")}
         </div>
 
         <div>
-          <label htmlFor="occurred_at" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="occurred_at" className="block text-sm font-medium text-text-primary">
             Occurred at *
           </label>
           <input id="occurred_at" name="occurred_at" type="datetime-local" required defaultValue={nowLocalInputValue()} className={inputClass("occurred_at")} />
@@ -129,7 +129,7 @@ export default function AlarmForm({
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="description" className="block text-sm font-medium text-text-primary">
           Description *
         </label>
         <textarea
@@ -147,7 +147,7 @@ export default function AlarmForm({
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="w-full rounded-md bg-accent-blue px-4 py-2 text-sm font-semibold text-white hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:ring-offset-2 focus:ring-offset-bg-secondary disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {pending ? "Saving..." : "Report alarm"}
       </button>
