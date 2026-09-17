@@ -84,6 +84,8 @@ alarms   1 ──── 0..1 maintenance_records (alarm_id)
 
 สิทธิ์เข้าถึงข้อมูลควบคุมด้วย **Row Level Security (RLS)** ทุกตาราง พร้อมฟังก์ชัน `current_role_name()` สำหรับตรวจ role ใน policy
 
+SQL schema ฉบับเต็ม (enum, table, index, RLS policy) อยู่ที่ [`supabase/schema.sql`](./supabase/schema.sql) — รันใน Supabase SQL Editor เพื่อสร้างฐานข้อมูลใหม่ทั้งหมด
+
 ## 5. วิธีรันโปรเจกต์
 
 ```bash
