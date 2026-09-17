@@ -105,6 +105,19 @@ bun run dev
 ## 6. Vercel URL
 
 [https://amms-red.vercel.app](https://amms-red.vercel.app/)
+
+## 6.1 Screenshot
+
+| Dashboard | Machines |
+| --- | --- |
+| ![Dashboard](./docs/screenshots/dashboard.png) | ![Machines](./docs/screenshots/machines.png) |
+
+| Alarms | Maintenance |
+| --- | --- |
+| ![Alarms](./docs/screenshots/alarms.png) | ![Maintenance](./docs/screenshots/maintenance.png) |
+
+![Simulator](./docs/screenshots/simulator.png)
+
 ## 7. การนำ AI มาช่วยพัฒนา
 
 - ใช้ AI ช่วยวิเคราะห์ Requirement ออกแบบ Database สร้าง Server Actions เขียน UI Components และ Debug ปัญหาตลอดการพัฒนา
