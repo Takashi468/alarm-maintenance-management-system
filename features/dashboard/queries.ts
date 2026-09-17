@@ -32,7 +32,11 @@ async function countMachines(status?: MachineStatus): Promise<number> {
 async function countAlarms(status: string): Promise<number> {
   const supabase = createClient()
 
-  const { count, error } = await supabase.from("alarms").select("*", { count: "exact", head: true }).eq("status", status)
+  const { count, error } = await supabase
+    .from("alarms")
+    .select("*, machines!inner(deleted_at)", { count: "exact", head: true })
+    .is("machines.deleted_at", null)
+    .eq("status", status)
 
   if (error) throw new Error(error.message)
 
@@ -42,7 +46,11 @@ async function countAlarms(status: string): Promise<number> {
 async function countMaintenance(status: string): Promise<number> {
   const supabase = createClient()
 
-  const { count, error } = await supabase.from("maintenance_records").select("*", { count: "exact", head: true }).eq("status", status)
+  const { count, error } = await supabase
+    .from("maintenance_records")
+    .select("*, machines!inner(deleted_at)", { count: "exact", head: true })
+    .is("machines.deleted_at", null)
+    .eq("status", status)
 
   if (error) throw new Error(error.message)
 
@@ -98,7 +106,8 @@ export async function getRecentAlarms(limit = 5): Promise<RecentAlarm[]> {
 
   const { data, error } = await supabase
     .from("alarms")
-    .select("id, alarm_code, occurred_at, status, machines(machine_id, machine_name)")
+    .select("id, alarm_code, occurred_at, status, machines!inner(machine_id, machine_name)")
+    .is("machines.deleted_at", null)
     .in("status", ["Open", "In Progress"])
     .order("occurred_at", { ascending: false })
     .limit(limit)

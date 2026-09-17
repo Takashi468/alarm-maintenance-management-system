@@ -54,7 +54,8 @@ export async function getAlarms(filters?: AlarmFilters): Promise<AlarmWithRelati
 
   let query = supabase
     .from("alarms")
-    .select("*, machines(machine_id, machine_name), profiles!closed_by(full_name)")
+    .select("*, machines!inner(machine_id, machine_name), profiles!closed_by(full_name)")
+    .is("machines.deleted_at", null)
     .order("occurred_at", { ascending: false })
 
   if (filters?.machine_id) {

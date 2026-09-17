@@ -21,11 +21,16 @@ export interface MaintenanceFilters {
 }
 
 const SELECT = "*, machines(machine_id, machine_name), profiles!technician_id(full_name)"
+const SELECT_ACTIVE_MACHINE = "*, machines!inner(machine_id, machine_name), profiles!technician_id(full_name)"
 
 export async function getMaintenanceRecords(filters?: MaintenanceFilters): Promise<MaintenanceWithRelations[]> {
   const supabase = createClient()
 
-  let query = supabase.from("maintenance_records").select(SELECT).order("created_at", { ascending: false })
+  let query = supabase
+    .from("maintenance_records")
+    .select(SELECT_ACTIVE_MACHINE)
+    .is("machines.deleted_at", null)
+    .order("created_at", { ascending: false })
 
   if (filters?.machine_id) {
     query = query.eq("machine_id", filters.machine_id)
@@ -108,7 +113,8 @@ export async function getOpenAlarmOptions(includeId?: string): Promise<AlarmOpti
 
   let query = supabase
     .from("alarms")
-    .select("id, alarm_code, description, status, machines(machine_id)")
+    .select("id, alarm_code, description, status, machines!inner(machine_id)")
+    .is("machines.deleted_at", null)
     .order("occurred_at", { ascending: false })
     .limit(100)
 
