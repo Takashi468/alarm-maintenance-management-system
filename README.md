@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alarm & Maintenance Management System (AMMS)
 
-## Getting Started
+![CI](https://github.com/<owner>/amms/actions/workflows/ci.yml/badge.svg)
+![Vercel](https://vercel.com/badge.svg)
+![Next.js](https://img.shields.io/badge/Next.js-14.2.35-black?logo=nextdotjs)
 
-First, run the development server:
+## 1. ภาพรวมโครงการ
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Alarm & Maintenance Management System (AMMS)** คือระบบเว็บแอปพลิเคชันสำหรับจัดการข้อมูล **Machine**, **Alarm** และ **Maintenance** ของเครื่องจักรในโรงงาน ครอบคลุมวงจรการทำงานตั้งแต่การบันทึกสถานะเครื่องจักร การรับ-ปิด alarm การสั่งงานซ่อมบำรุง ไปจนถึงการติดตามภาพรวมผ่าน dashboard โดยรองรับผู้ใช้หลายบทบาท (Admin / Technician / Viewer) ผ่านระบบสิทธิ์แบบ role-based
+
+## 2. ฟีเจอร์หลัก
+
+- **Machine Master (CRUD)** — จัดการข้อมูลเครื่องจักร เพิ่ม/แก้ไข/ลบ (soft delete) พร้อมสถานะ Running, Stop, Maintenance, Alarm
+- **Alarm Record (CRU + Status Transition)** — บันทึก alarm ของเครื่องจักร เปลี่ยนสถานะ Open → In Progress → Closed พร้อมบันทึกสาเหตุและผู้ใช้ที่ปิด
+- **Maintenance Record (CRU)** — บันทึกงานซ่อมบำรุง เชื่อมโยงกับ machine และ alarm ได้ เปลี่ยนสถานะ Pending → In Progress → Done พร้อม action taken
+- **Dashboard ภาพรวม** — สรุปสถานะเครื่องจักรทั้งหมด, alarm ล่าสุด และ backlog งานซ่อมบำรุง
+- **Search & Filter** — ค้นหาและกรองข้อมูลในหน้า machines / alarms / maintenance
+- **Role-based Access (Admin / Technician)** — ควบคุมสิทธิ์ตามบทบาทด้วย Middleware + Server Action + RLS
+- **PLC Mock Simulator** — จำลองการเปลี่ยนสถานะเครื่องจักรจากฝั่ง OT (ดูหัวข้อที่ 8)
+
+## 3. เทคโนโลยีที่ใช้
+
+| หมวด | เทคโนโลยี |
+| --- | --- |
+| Frontend / Backend | Next.js 14 (App Router), TypeScript, Tailwind CSS |
+| Database & Auth | Supabase (PostgreSQL + Auth + Row Level Security) |
+| CI/CD | GitHub Actions (lint → build → test) |
+| Deployment | Vercel |
+| Package Manager | bun |
+
+## 4. โครงสร้างฐานข้อมูล
+
+### profiles
+| คอลัมน์ | ประเภท | หมายเหตุ |
+| --- | --- | --- |
+| id | uuid (PK) | อ้างอิง `auth.users.id` |
+| full_name | text | — |
+| role | enum | `admin` \| `technician` \| `viewer` |
+| created_at | timestamptz | — |
+
+### machines
+| คอลัมน์ | ประเภท | หมายเหตุ |
+| --- | --- | --- |
+| id | uuid (PK) | — |
+| machine_id | text | รหัสเครื่องจักร |
+| machine_name | text | — |
+| machine_type | text | — |
+| location | text | — |
+| status | enum | `Running` \| `Stop` \| `Maintenance` \| `Alarm` |
+| deleted_at | timestamptz (null) | soft delete |
+| last_updated_at / created_at | timestamptz | — |
+
+### alarms
+| คอลัมน์ | ประเภท | หมายเหตุ |
+| --- | --- | --- |
+| id | uuid (PK) | — |
+| machine_id | uuid (FK → machines.id) | เครื่องจักรที่เกิด alarm |
+| alarm_code | text | รหัส alarm |
+| description | text | รายละเอียด |
+| cause | text (null) | สาเหตุ (กรอกตอนปิด) |
+| occurred_at | timestamptz | เวลาเกิดเหตุการณ์ |
+| status | enum | `Open` \| `In Progress` \| `Closed` |
+| created_by / closed_by | uuid (FK → profiles.id, null) | ระบบกำหนดฝั่ง server เท่านั้น |
+| closed_at | timestamptz (null) | ระบบกำหนดฝั่ง server เท่านั้น |
+
+### maintenance_records
+| คอลัมน์ | ประเภท | หมายเหตุ |
+| --- | --- | --- |
+| id | uuid (PK) | — |
+| machine_id | uuid (FK → machines.id) | เครื่องจักรที่เข้าซ่อม |
+| alarm_id | uuid (FK → alarms.id, null) | เชื่อมกับ alarm ที่เกี่ยวข้อง |
+| technician_id | uuid (FK → profiles.id, null) | ช่างผู้รับผิดชอบ |
+| problem | text | ปัญหาที่พบ |
+| action_taken | text (null) | การแก้ไข (กรอกตอน Done) |
+| maintained_at | timestamptz | เวลาเข้าซ่อม |
+| status | enum | `Pending` \| `In Progress` \| `Done` |
+| created_at | timestamptz | — |
+
+### ความสัมพันธ์ระหว่างตาราง
+
+```
+profiles 1 ──── N alarms (created_by / closed_by)
+profiles 1 ──── N maintenance_records (technician_id)
+machines 1 ──── N alarms
+machines 1 ──── N maintenance_records
+alarms   1 ──── 0..1 maintenance_records (alarm_id)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+สิทธิ์เข้าถึงข้อมูลควบคุมด้วย **Row Level Security (RLS)** ทุกตาราง พร้อมฟังก์ชัน `current_role_name()` สำหรับตรวจ role ใน policy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 5. วิธีรันโปรเจกต์
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone https://github.com/<owner>/amms.git
+cd amms
+bun install
+cp .env.local.example .env.local
+# แก้ไขค่าใน .env.local:
+#   NEXT_PUBLIC_SUPABASE_URL
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY
+#   SUPABASE_SERVICE_ROLE_KEY  (ใช้ฝั่ง server เท่านั้น)
+bun run dev
+```
 
-## Learn More
+เปิดใช้งานได้ที่ http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+## 6. Vercel URL
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[https://amms-xxxxx.vercel.app](https://amms-xxxxx.vercel.app) *(ใส่ link จริงเมื่อ deploy แล้ว)*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 7. การนำ AI มาช่วยพัฒนา
 
-## Deploy on Vercel
+- ใช้ AI ช่วยวิเคราะห์ Requirement ออกแบบ Database สร้าง Server Actions เขียน UI Components และ Debug ปัญหาตลอดการพัฒนา
+- **คน** เป็นผู้ออกแบบ Security Boundary (Middleware → Server Action → RLS) และกำหนด Business Rule ของระบบ เช่น สถานะ alarm ที่เปลี่ยนได้, `closed_by`/`closed_at` ต้องมาจาก server เท่านั้น
+- **AI** ทำหน้าที่ implement ตามกฎที่กำหนด และตรวจสอบความถูกต้องด้วย lint / typecheck / E2E test
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 8. PLC Mock Simulator
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+หน้า `/simulator` ทำหน้าที่เป็น **Integration Layer ระหว่างระบบ OT กับ IT** — ในสภาพแวดล้อมจริง สถานะเครื่องจักรและ alarm จะมาจาก PLC ผ่านระบบ fieldbus แต่ในเวอร์ชันนี้ใช้ mock แทน โดย Admin สามารถกดเปลี่ยนสถานะเครื่องจักร (Running / Stop / Maintenance / Alarm) ได้โดยตรง ซึ่งเทียบเท่ากับการที่ PLC รายงานสถานะเข้ามา และเมื่อตั้งเป็น `Alarm` ระบบจะสร้างบันทึก alarm ให้โดยอัตโนมัติ
+
+**แผน V2:** เปลี่ยนจาก mock เป็น **API Gateway + MQTT/OPC UA** เพื่อเชื่อมต่อ PLC จริง โดยโครงสร้างฝั่ง application (Server Actions, RLS, UI) จะยังคงเดิม เพียงเปลี่ยนแหล่งที่มาของข้อมูลสถานะเครื่องจักรเท่านั้น
