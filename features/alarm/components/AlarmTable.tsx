@@ -1,14 +1,9 @@
 import Link from "next/link"
 import AlarmStatusModal from "./AlarmStatusModal"
 import { closeAlarm, updateAlarmStatus } from "../actions"
-import type { AlarmStatus } from "../constants"
+import StatusBadge from "@/components/ui/StatusBadge"
+import EmptyState from "@/components/ui/EmptyState"
 import type { AlarmWithRelations } from "../queries"
-
-const STATUS_STYLES: Record<AlarmStatus, string> = {
-  Open: "bg-red-100 text-red-800",
-  "In Progress": "bg-blue-100 text-blue-800",
-  Closed: "bg-gray-100 text-gray-700",
-}
 
 function formatDateTime(iso: string): string {
   const d = new Date(iso)
@@ -19,15 +14,14 @@ function formatDateTime(iso: string): string {
 export default function AlarmTable({ alarms }: { alarms: AlarmWithRelations[] }) {
   if (alarms.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center">
-        <p className="text-sm text-gray-500">No alarms found.</p>
-        <Link
-          href="/alarms/new"
-          className="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
-          Report alarm
-        </Link>
-      </div>
+      <EmptyState
+        title="No alarms found."
+        action={
+          <Link href="/alarms/new" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+            Report alarm
+          </Link>
+        }
+      />
     )
   }
 
@@ -64,9 +58,7 @@ export default function AlarmTable({ alarms }: { alarms: AlarmWithRelations[] })
                 <span title={alarm.description}>{alarm.description.length > 80 ? alarm.description.slice(0, 80) + "…" : alarm.description}</span>
               </td>
               <td className="px-4 py-3">
-                <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[alarm.status]}`}>
-                  {alarm.status}
-                </span>
+                <StatusBadge status={alarm.status} />
               </td>
               <td className="max-w-xs px-4 py-3 text-gray-600">
                 {alarm.cause ? (

@@ -2,6 +2,7 @@ import Link from "next/link"
 import MaintenanceFilterBar from "@/features/maintenance/components/MaintenanceFilterBar"
 import MaintenanceTable from "@/features/maintenance/components/MaintenanceTable"
 import { getMaintenanceRecords, getMachineOptions } from "@/features/maintenance/queries"
+import ErrorState from "@/components/ui/ErrorState"
 
 export const metadata = { title: "Maintenance | AMMS" }
 
@@ -17,13 +18,19 @@ function first(value: string | string[] | undefined): string | undefined {
 }
 
 export default async function MaintenancePage({ searchParams }: MaintenancePageProps) {
-  const [records, machines] = await Promise.all([
-    getMaintenanceRecords({
-      machine_id: first(searchParams.machine_id),
-      status: first(searchParams.status),
-    }),
-    getMachineOptions(),
-  ])
+  const filters = {
+    machine_id: first(searchParams.machine_id),
+    status: first(searchParams.status),
+  }
+  const hasFilters = Boolean(filters.machine_id || filters.status)
+
+  let records: Awaited<ReturnType<typeof getMaintenanceRecords>>
+  let machines: Awaited<ReturnType<typeof getMachineOptions>>
+  try {
+    ;[records, machines] = await Promise.all([getMaintenanceRecords(filters), getMachineOptions()])
+  } catch (err) {
+    return <ErrorState message={err instanceof Error ? err.message : "Unexpected error"} />
+  }
 
   return (
     <div className="space-y-6">
@@ -31,7 +38,9 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Maintenance</h1>
           <p className="mt-1 text-sm text-gray-600">
-            {records.length} {records.length === 1 ? "record" : "records"}
+            {hasFilters
+              ? `Showing ${records.length} ${records.length === 1 ? "result" : "results"}`
+              : `${records.length} ${records.length === 1 ? "record" : "records"}`}
           </p>
         </div>
         <Link
@@ -42,13 +51,7 @@ export default async function MaintenancePage({ searchParams }: MaintenancePageP
         </Link>
       </div>
 
-      <MaintenanceFilterBar
-        machines={machines}
-        initial={{
-          machine_id: first(searchParams.machine_id),
-          status: first(searchParams.status),
-        }}
-      />
+      <MaintenanceFilterBar machines={machines} initial={filters} />
 
       <MaintenanceTable records={records} />
     </div>

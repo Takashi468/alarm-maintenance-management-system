@@ -2,6 +2,7 @@ import Link from "next/link"
 import MachineFilterBar from "@/features/machine/components/MachineFilterBar"
 import MachineTable from "@/features/machine/components/MachineTable"
 import { getMachines } from "@/features/machine/queries"
+import ErrorState from "@/components/ui/ErrorState"
 
 export const metadata = { title: "Machines | AMMS" }
 
@@ -14,10 +15,16 @@ function first(value: string | string[] | undefined): string | undefined {
 }
 
 export default async function MachinesPage({ searchParams }: MachinesPageProps) {
-  const machines = await getMachines({
-    search: first(searchParams.q),
-    status: first(searchParams.status),
-  })
+  const q = first(searchParams.q) ?? ""
+  const status = first(searchParams.status) ?? ""
+  const hasFilters = Boolean(q || status)
+
+  let machines: Awaited<ReturnType<typeof getMachines>>
+  try {
+    machines = await getMachines({ search: q, status })
+  } catch (err) {
+    return <ErrorState message={err instanceof Error ? err.message : "Unexpected error"} />
+  }
 
   return (
     <div className="space-y-6">
@@ -25,7 +32,9 @@ export default async function MachinesPage({ searchParams }: MachinesPageProps) 
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Machines</h1>
           <p className="mt-1 text-sm text-gray-600">
-            {machines.length} {machines.length === 1 ? "machine" : "machines"} registered
+            {hasFilters
+              ? `Showing ${machines.length} ${machines.length === 1 ? "result" : "results"}`
+              : `${machines.length} ${machines.length === 1 ? "machine" : "machines"} registered`}
           </p>
         </div>
         <Link
@@ -36,7 +45,7 @@ export default async function MachinesPage({ searchParams }: MachinesPageProps) 
         </Link>
       </div>
 
-      <MachineFilterBar initialSearch={first(searchParams.q) ?? ""} initialStatus={first(searchParams.status) ?? ""} />
+      <MachineFilterBar initialSearch={q} initialStatus={status} />
 
       <MachineTable machines={machines} />
     </div>

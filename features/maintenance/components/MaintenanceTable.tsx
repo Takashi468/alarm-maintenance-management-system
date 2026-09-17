@@ -1,25 +1,19 @@
 import Link from "next/link"
-import type { MntStatus } from "../constants"
+import StatusBadge from "@/components/ui/StatusBadge"
+import EmptyState from "@/components/ui/EmptyState"
 import type { MaintenanceWithRelations } from "../queries"
-
-const STATUS_STYLES: Record<MntStatus, string> = {
-  Pending: "bg-amber-100 text-amber-800",
-  "In Progress": "bg-blue-100 text-blue-800",
-  Done: "bg-green-100 text-green-800",
-}
 
 export default function MaintenanceTable({ records }: { records: MaintenanceWithRelations[] }) {
   if (records.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center">
-        <p className="text-sm text-gray-500">No maintenance records found.</p>
-        <Link
-          href="/maintenance/new"
-          className="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
-          New record
-        </Link>
-      </div>
+      <EmptyState
+        title="No maintenance records found."
+        action={
+          <Link href="/maintenance/new" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+            New record
+          </Link>
+        }
+      />
     )
   }
 
@@ -55,9 +49,7 @@ export default function MaintenanceTable({ records }: { records: MaintenanceWith
               <td className="whitespace-nowrap px-4 py-3 text-gray-600">{record.profiles?.full_name || <span className="text-gray-300">—</span>}</td>
               <td className="whitespace-nowrap px-4 py-3 text-gray-600">{record.maintained_at}</td>
               <td className="px-4 py-3">
-                <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[record.status]}`}>
-                  {record.status}
-                </span>
+                <StatusBadge status={record.status} />
               </td>
               <td className="whitespace-nowrap px-4 py-3 text-right">
                 <Link href={`/maintenance/${record.id}/edit`} className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">

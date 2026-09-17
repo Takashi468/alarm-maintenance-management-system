@@ -2,6 +2,7 @@ import Link from "next/link"
 import AlarmFilterBar from "@/features/alarm/components/AlarmFilterBar"
 import AlarmTable from "@/features/alarm/components/AlarmTable"
 import { getAlarms, getActiveMachines } from "@/features/alarm/queries"
+import ErrorState from "@/components/ui/ErrorState"
 
 export const metadata = { title: "Alarms | AMMS" }
 
@@ -19,15 +20,21 @@ function first(value: string | string[] | undefined): string | undefined {
 }
 
 export default async function AlarmsPage({ searchParams }: AlarmsPageProps) {
-  const [alarms, machines] = await Promise.all([
-    getAlarms({
-      machine_id: first(searchParams.machine_id),
-      status: first(searchParams.status),
-      date_from: first(searchParams.date_from),
-      date_to: first(searchParams.date_to),
-    }),
-    getActiveMachines(),
-  ])
+  const filters = {
+    machine_id: first(searchParams.machine_id),
+    status: first(searchParams.status),
+    date_from: first(searchParams.date_from),
+    date_to: first(searchParams.date_to),
+  }
+  const hasFilters = Boolean(filters.machine_id || filters.status || filters.date_from || filters.date_to)
+
+  let alarms: Awaited<ReturnType<typeof getAlarms>>
+  let machines: Awaited<ReturnType<typeof getActiveMachines>>
+  try {
+    ;[alarms, machines] = await Promise.all([getAlarms(filters), getActiveMachines()])
+  } catch (err) {
+    return <ErrorState message={err instanceof Error ? err.message : "Unexpected error"} />
+  }
 
   return (
     <div className="space-y-6">
@@ -35,7 +42,9 @@ export default async function AlarmsPage({ searchParams }: AlarmsPageProps) {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Alarms</h1>
           <p className="mt-1 text-sm text-gray-600">
-            {alarms.length} {alarms.length === 1 ? "alarm" : "alarms"} reported
+            {hasFilters
+              ? `Showing ${alarms.length} ${alarms.length === 1 ? "result" : "results"}`
+              : `${alarms.length} ${alarms.length === 1 ? "alarm" : "alarms"} reported`}
           </p>
         </div>
         <Link
@@ -46,15 +55,7 @@ export default async function AlarmsPage({ searchParams }: AlarmsPageProps) {
         </Link>
       </div>
 
-      <AlarmFilterBar
-        machines={machines}
-        initial={{
-          machine_id: first(searchParams.machine_id),
-          status: first(searchParams.status),
-          date_from: first(searchParams.date_from),
-          date_to: first(searchParams.date_to),
-        }}
-      />
+      <AlarmFilterBar machines={machines} initial={filters} />
 
       <AlarmTable alarms={alarms} />
     </div>

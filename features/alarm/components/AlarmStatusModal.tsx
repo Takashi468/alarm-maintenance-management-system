@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import type { AlarmActionResult } from "../actions"
 import type { AlarmStatus } from "../constants"
 
@@ -20,6 +20,15 @@ export default function AlarmStatusModal({
   const [causeError, setCauseError] = useState<string | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
+
+  // After a successful action the server redirects to the same page; React reuses this
+  // component instance (keyed by row) and would otherwise keep `open` true with stale state.
+  useEffect(() => {
+    setOpen(false)
+    setCause("")
+    setCauseError(null)
+    setFormError(null)
+  }, [status])
 
   if (status === "Closed") return null
 

@@ -59,6 +59,20 @@ export default function MachineFilterBar({
           </option>
         ))}
       </select>
+
+      {(search || status) && (
+        <button
+          type="button"
+          onClick={() => {
+            setSearch("")
+            setStatus("")
+            apply("", "")
+          }}
+          className="text-sm font-medium text-blue-600 hover:text-blue-800"
+        >
+          Clear filters
+        </button>
+      )}
     </div>
   )
 }

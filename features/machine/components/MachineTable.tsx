@@ -1,27 +1,21 @@
 import Link from "next/link"
 import DeleteMachineButton from "./DeleteMachineButton"
 import { deleteMachine } from "../actions"
-import type { Machine, MachineStatus } from "../queries"
-
-const STATUS_STYLES: Record<MachineStatus, string> = {
-  Running: "bg-green-100 text-green-800",
-  Stop: "bg-gray-200 text-gray-700",
-  Maintenance: "bg-amber-100 text-amber-800",
-  Alarm: "bg-red-100 text-red-800",
-}
+import StatusBadge from "@/components/ui/StatusBadge"
+import EmptyState from "@/components/ui/EmptyState"
+import type { Machine } from "../queries"
 
 export default function MachineTable({ machines }: { machines: Machine[] }) {
   if (machines.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center">
-        <p className="text-sm text-gray-500">No machines found.</p>
-        <Link
-          href="/machines/new"
-          className="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-        >
-          Add machine
-        </Link>
-      </div>
+      <EmptyState
+        title="No machines found."
+        action={
+          <Link href="/machines/new" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+            Add machine
+          </Link>
+        }
+      />
     )
   }
 
@@ -46,13 +40,7 @@ export default function MachineTable({ machines }: { machines: Machine[] }) {
               <td className="px-4 py-3 text-gray-600">{machine.machine_type}</td>
               <td className="px-4 py-3 text-gray-600">{machine.location}</td>
               <td className="px-4 py-3">
-                <span
-                  className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    STATUS_STYLES[machine.status] ?? "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {machine.status}
-                </span>
+                <StatusBadge status={machine.status} />
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center justify-end gap-2">
