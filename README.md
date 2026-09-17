@@ -1,9 +1,5 @@
 # Alarm & Maintenance Management System (AMMS)
 
-![CI](https://github.com/<owner>/amms/actions/workflows/ci.yml/badge.svg)
-![Vercel](https://vercel.com/badge.svg)
-![Next.js](https://img.shields.io/badge/Next.js-14.2.35-black?logo=nextdotjs)
-
 ## 1. ภาพรวมโครงการ
 
 **Alarm & Maintenance Management System (AMMS)** คือระบบเว็บแอปพลิเคชันสำหรับจัดการข้อมูล **Machine**, **Alarm** และ **Maintenance** ของเครื่องจักรในโรงงาน ครอบคลุมวงจรการทำงานตั้งแต่การบันทึกสถานะเครื่องจักร การรับ-ปิด alarm การสั่งงานซ่อมบำรุง ไปจนถึงการติดตามภาพรวมผ่าน dashboard โดยรองรับผู้ใช้หลายบทบาท (Admin / Technician / Viewer) ผ่านระบบสิทธิ์แบบ role-based
@@ -106,8 +102,7 @@ bun run dev
 
 ## 6. Vercel URL
 
-[https://amms-xxxxx.vercel.app](https://amms-xxxxx.vercel.app) *(ใส่ link จริงเมื่อ deploy แล้ว)*
-
+[https://amms-red.vercel.app](https://amms-red.vercel.app/)
 ## 7. การนำ AI มาช่วยพัฒนา
 
 - ใช้ AI ช่วยวิเคราะห์ Requirement ออกแบบ Database สร้าง Server Actions เขียน UI Components และ Debug ปัญหาตลอดการพัฒนา
