@@ -140,33 +140,33 @@ export interface Database {
           id: string
           machine_id: string
           alarm_id: string | null
-          technician_id: string
-          problem: string | null
+          technician_id: string | null
+          problem: string
           action_taken: string | null
-          maintained_at: string | null
-          status: string
+          maintained_at: string
+          status: Database["public"]["Enums"]["mnt_status"]
           created_at: string
         }
         Insert: {
           id?: string
           machine_id: string
           alarm_id?: string | null
-          technician_id: string
-          problem?: string | null
+          technician_id?: string | null
+          problem: string
           action_taken?: string | null
-          maintained_at?: string | null
-          status?: string
+          maintained_at?: string
+          status?: Database["public"]["Enums"]["mnt_status"]
           created_at?: string
         }
         Update: {
           id?: string
           machine_id?: string
           alarm_id?: string | null
-          technician_id?: string
-          problem?: string | null
+          technician_id?: string | null
+          problem?: string
           action_taken?: string | null
-          maintained_at?: string | null
-          status?: string
+          maintained_at?: string
+          status?: Database["public"]["Enums"]["mnt_status"]
           created_at?: string
         }
         Relationships: [
@@ -211,6 +211,7 @@ export interface Database {
       profile_role: "admin" | "technician" | "viewer"
       machine_status: "Running" | "Maintenance" | "Alarm"
       alarm_status: "Open" | "In Progress" | "Closed"
+      mnt_status: "Pending" | "In Progress" | "Done"
     }
     CompositeTypes: {
       [_ in never]: never
