@@ -17,7 +17,7 @@ export async function requireAdmin(): Promise<SupabaseClient> {
     .eq("id", user.id)
     .maybeSingle()
 
-  if (profile?.role !== "admin") redirect("/machines")
+  if (profile?.role !== "admin" && profile?.role !== "superadmin") redirect("/machines")
 
   return supabase
 }

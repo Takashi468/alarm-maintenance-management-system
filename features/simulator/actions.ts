@@ -33,7 +33,7 @@ export async function triggerMachineEvent(
     .eq("id", user.id)
     .maybeSingle()
 
-  if (profile?.role !== "admin") redirect("/dashboard")
+  if (profile?.role !== "admin" && profile?.role !== "superadmin") redirect("/dashboard")
 
   if (!SIMULATOR_STATUSES.includes(newStatus)) return { error: "Unknown machine status." }
 

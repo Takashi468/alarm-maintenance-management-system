@@ -17,7 +17,8 @@ export async function requireStaff(): Promise<{ supabase: SupabaseClient; userId
     .eq("id", user.id)
     .maybeSingle()
 
-  if (profile?.role !== "admin" && profile?.role !== "technician") redirect("/maintenance")
+  if (profile?.role !== "admin" && profile?.role !== "technician" && profile?.role !== "superadmin")
+    redirect("/maintenance")
 
   return { supabase, userId: user.id }
 }

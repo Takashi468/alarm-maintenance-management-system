@@ -7,7 +7,7 @@ import { PROFILE_ROLES, type ProfileRole } from "./constants"
 
 export type UserActionResult = { error?: string } | null
 
-async function requireAdmin() {
+async function getActor() {
   const supabase = createClient()
 
   const {
@@ -22,28 +22,43 @@ async function requireAdmin() {
     .eq("id", user.id)
     .maybeSingle()
 
-  if (profile?.role !== "admin") redirect("/dashboard")
+  const role = (profile?.role ?? "viewer") as ProfileRole
+  if (role !== "admin" && role !== "superadmin") redirect("/dashboard")
+
+  return { id: user.id, role }
 }
 
 export async function updateUserRole(userId: string, role: ProfileRole): Promise<UserActionResult> {
-  await requireAdmin()
+  const actor = await getActor()
 
   if (!PROFILE_ROLES.includes(role)) return { error: "Select a valid role." }
 
+  if (userId === actor.id) return { error: "You cannot change your own role." }
+
   const admin = createAdminClient()
 
-  const { data, error } = await admin
+  const { data: target, error: fetchError } = await admin
     .from("profiles")
-    .update({ role })
+    .select("role")
     .eq("id", userId)
-    .select()
     .maybeSingle()
 
-  if (error) return { error: error.message }
+  if (fetchError) return { error: fetchError.message }
+  if (!target) return { error: "User not found." }
 
-  if (!data) {
-    return { error: "User not found." }
+  const targetRole = target.role as ProfileRole
+
+  if (actor.role === "admin" && (targetRole === "admin" || targetRole === "superadmin")) {
+    return { error: "Only a superadmin can change an admin or superadmin account." }
   }
+
+  if (role === "superadmin" && actor.role !== "superadmin") {
+    return { error: "Only a superadmin can assign the superadmin role." }
+  }
+
+  const { error } = await admin.from("profiles").update({ role }).eq("id", userId)
+
+  if (error) return { error: error.message }
 
   redirect("/users")
 }

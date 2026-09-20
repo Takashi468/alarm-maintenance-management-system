@@ -3,6 +3,7 @@
 import { useProfile, type Profile } from "@/features/auth/profile-context"
 
 const roleStyles: Record<Profile["role"], string> = {
+  superadmin: "bg-purple-900/50 text-purple-300 border border-purple-700",
   admin: "bg-red-900/50 text-red-400 border border-red-700",
   technician: "bg-blue-900/50 text-accent-blue border border-blue-700",
   viewer: "bg-gray-800 text-gray-400 border border-gray-600",

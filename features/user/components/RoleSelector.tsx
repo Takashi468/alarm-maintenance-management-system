@@ -9,11 +9,13 @@ export default function RoleSelector({
   userLabel,
   role,
   onUpdate,
+  hint,
 }: {
   userId: string
   userLabel: string
   role: ProfileRole
   onUpdate: (role: ProfileRole) => Promise<UserActionResult>
+  hint?: string
 }) {
   const [selected, setSelected] = useState<ProfileRole>(role)
   const [error, setError] = useState<string | null>(null)
@@ -61,6 +63,9 @@ export default function RoleSelector({
         <p role="alert" className="text-right text-xs text-red-400">
           {error}
         </p>
+      )}
+      {!error && hint && (
+        <p className="text-right text-xs text-gray-500">{hint}</p>
       )}
     </div>
   )

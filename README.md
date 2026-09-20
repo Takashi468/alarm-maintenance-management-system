@@ -2,7 +2,7 @@
 
 ## 1. ภาพรวมโครงการ
 
-**Alarm & Maintenance Management System (AMMS)** คือระบบเว็บแอปพลิเคชันสำหรับจัดการข้อมูล **Machine**, **Alarm** และ **Maintenance** ของเครื่องจักรในโรงงาน ครอบคลุมวงจรการทำงานตั้งแต่การบันทึกสถานะเครื่องจักร การรับ-ปิด alarm การสั่งงานซ่อมบำรุง ไปจนถึงการติดตามภาพรวมผ่าน dashboard โดยรองรับผู้ใช้หลายบทบาท (Admin / Technician / Viewer) ผ่านระบบสิทธิ์แบบ role-based
+**Alarm & Maintenance Management System (AMMS)** คือระบบเว็บแอปพลิเคชันสำหรับจัดการข้อมูล **Machine**, **Alarm** และ **Maintenance** ของเครื่องจักรในโรงงาน ครอบคลุมวงจรการทำงานตั้งแต่การบันทึกสถานะเครื่องจักร การรับ-ปิด alarm การสั่งงานซ่อมบำรุง ไปจนถึงการติดตามภาพรวมผ่าน dashboard โดยรองรับผู้ใช้หลายบทบาท (Superadmin / Admin / Technician / Viewer) ผ่านระบบสิทธิ์แบบ role-based
 
 ## 2. ฟีเจอร์หลัก
 
@@ -31,7 +31,7 @@
 | --- | --- | --- |
 | id | uuid (PK) | อ้างอิง `auth.users.id` |
 | full_name | text | — |
-| role | enum | `admin` \| `technician` \| `viewer` |
+| role | enum | `admin` \| `technician` \| `viewer` \| `superadmin` |
 | created_at | timestamptz | — |
 
 ### machines
@@ -83,6 +83,20 @@ alarms   1 ──── 0..1 maintenance_records (alarm_id)
 ```
 
 สิทธิ์เข้าถึงข้อมูลควบคุมด้วย **Row Level Security (RLS)** ทุกตาราง พร้อมฟังก์ชัน `current_role_name()` สำหรับตรวจ role ใน policy
+
+### บทบาทและสิทธิ์ (Role Permissions)
+
+| สิทธิ์ | superadmin | admin | technician | viewer |
+| --- | --- | --- | --- | --- |
+| ดู dashboard | ✓ | ✓ | ✓ | ✓ |
+| จัดการ machines / simulator | ✓ | ✓ | — | — |
+| รับ-ปิด alarm, สั่งซ่อมบำรุง | ✓ | ✓ | ✓ | — |
+| เปลี่ยน role ของผู้ใช้คนอื่น | ✓ (ทุกคน) | เฉพาะ technician/viewer | — | — |
+
+กฎเพิ่มเติม:
+- ไม่มีใครเปลี่ยน role ของตัวเองได้ (รวมถึง superadmin)
+- admin ไม่สามารถจัดการบัญชี admin / superadmin และไม่สามารถตั้งบทบาท superadmin ได้
+- superadmin เป็นบทบาทเดียวที่จัดการบัญชี admin / superadmin ได้
 
 SQL schema ฉบับเต็ม (enum, table, index, RLS policy) อยู่ที่ [`supabase/schema.sql`](./supabase/schema.sql) — รันใน Supabase SQL Editor เพื่อสร้างฐานข้อมูลใหม่ทั้งหมด
 

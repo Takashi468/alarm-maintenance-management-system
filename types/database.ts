@@ -208,7 +208,7 @@ export interface Database {
       }
     }
     Enums: {
-      profile_role: "admin" | "technician" | "viewer"
+      profile_role: "admin" | "superadmin" | "technician" | "viewer"
       machine_status: "Running" | "Stop" | "Maintenance" | "Alarm"
       alarm_status: "Open" | "In Progress" | "Closed"
       mnt_status: "Pending" | "In Progress" | "Done"

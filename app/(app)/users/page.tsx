@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import UserTable from "@/features/user/components/UserTable"
 import { getUsers } from "@/features/user/queries"
+import type { ProfileRole } from "@/features/user/constants"
 import ErrorState from "@/components/ui/ErrorState"
 
 export const metadata = { title: "Users | AMMS" }
@@ -21,7 +22,7 @@ export default async function UsersPage() {
     .eq("id", user.id)
     .maybeSingle()
 
-  if (profile?.role !== "admin") redirect("/dashboard")
+  if (profile?.role !== "admin" && profile?.role !== "superadmin") redirect("/dashboard")
 
   let users: Awaited<ReturnType<typeof getUsers>>
   try {
@@ -37,7 +38,7 @@ export default async function UsersPage() {
         <p className="mt-1 text-sm text-text-secondary">{users.length} users registered. Manage the role for each account.</p>
       </div>
 
-      <UserTable users={users} />
+      <UserTable users={users} currentUserId={user.id} actorRole={profile.role as ProfileRole} />
     </div>
   )
 }

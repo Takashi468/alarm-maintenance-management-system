@@ -4,15 +4,15 @@ import { ProfileProvider, type Profile } from "@/features/auth/profile-context"
 import Nav from "@/components/ui/Nav"
 import Header from "@/components/ui/Header"
 
-type AppRole = "admin" | "technician" | "viewer"
+type AppRole = "admin" | "superadmin" | "technician" | "viewer"
 
 const NAV_ITEMS: { href: string; label: string; roles: readonly AppRole[] }[] = [
-  { href: "/dashboard", label: "Dashboard", roles: ["admin", "technician", "viewer"] },
-  { href: "/machines", label: "Machines", roles: ["admin"] },
-  { href: "/alarms", label: "Alarms", roles: ["admin", "technician"] },
-  { href: "/maintenance", label: "Maintenance", roles: ["admin", "technician"] },
-  { href: "/users", label: "Users", roles: ["admin"] },
-  { href: "/simulator", label: "Simulator", roles: ["admin"] },
+  { href: "/dashboard", label: "Dashboard", roles: ["admin", "superadmin", "technician", "viewer"] },
+  { href: "/machines", label: "Machines", roles: ["admin", "superadmin"] },
+  { href: "/alarms", label: "Alarms", roles: ["admin", "superadmin", "technician"] },
+  { href: "/maintenance", label: "Maintenance", roles: ["admin", "superadmin", "technician"] },
+  { href: "/users", label: "Users", roles: ["admin", "superadmin"] },
+  { href: "/simulator", label: "Simulator", roles: ["admin", "superadmin"] },
 ]
 
 export default async function AppLayout({

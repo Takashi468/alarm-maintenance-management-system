@@ -5,6 +5,7 @@ import type { ProfileRole } from "../constants"
 import type { UserRow } from "../queries"
 
 const ROLE_STYLES: Record<ProfileRole, string> = {
+  superadmin: "bg-purple-900/50 text-purple-300 border border-purple-700",
   admin: "bg-red-900/50 text-red-400 border border-red-700",
   technician: "bg-blue-900/50 text-accent-blue border border-blue-700",
   viewer: "bg-gray-800 text-gray-400 border border-gray-600",
@@ -16,9 +17,25 @@ function formatDate(iso: string): string {
   return d.toLocaleDateString("en-GB", { timeZone: "UTC" }) + " UTC"
 }
 
-export default function UserTable({ users }: { users: UserRow[] }) {
+export default function UserTable({
+  users,
+  currentUserId,
+  actorRole,
+}: {
+  users: UserRow[]
+  currentUserId: string
+  actorRole: ProfileRole
+}) {
   if (users.length === 0) {
     return <EmptyState title="No users found." />
+  }
+
+  function hintFor(user: UserRow): string | undefined {
+    if (user.id === currentUserId) return "(you)"
+    if (actorRole === "admin" && (user.role === "admin" || user.role === "superadmin")) {
+      return "superadmin only"
+    }
+    return undefined
   }
 
   return (
@@ -53,6 +70,7 @@ export default function UserTable({ users }: { users: UserRow[] }) {
                   userId={user.id}
                   userLabel={user.email ?? user.full_name ?? "this user"}
                   role={user.role}
+                  hint={hintFor(user)}
                   onUpdate={updateUserRole.bind(null, user.id)}
                 />
               </td>

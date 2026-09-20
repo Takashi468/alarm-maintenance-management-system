@@ -13,7 +13,7 @@
 create type machine_status as enum ('Running', 'Stop', 'Alarm', 'Maintenance');
 create type alarm_status   as enum ('Open', 'In Progress', 'Closed');
 create type mnt_status     as enum ('Pending', 'In Progress', 'Done');
-create type user_role      as enum ('admin', 'technician', 'viewer');
+create type user_role      as enum ('admin', 'technician', 'viewer', 'superadmin');
 
 
 -- =====================================================================
@@ -114,11 +114,11 @@ alter table maintenance_records enable row level security;
 -- ---------- PROFILES ----------
 create policy "read own profile"
   on profiles for select
-  using (id = auth.uid() or current_role_name() = 'admin');
+  using (id = auth.uid() or current_role_name() in ('admin', 'superadmin'));
 
 create policy "admin manage profiles"
   on profiles for all
-  using (current_role_name() = 'admin');
+  using (current_role_name() in ('admin', 'superadmin'));
 
 -- ---------- MACHINES ----------
 -- ทุกคนที่ login อ่านได้ / เฉพาะ admin แก้ได้
@@ -128,8 +128,8 @@ create policy "authenticated read machines"
 
 create policy "admin write machines"
   on machines for all
-  using (current_role_name() = 'admin')
-  with check (current_role_name() = 'admin');
+  using (current_role_name() in ('admin', 'superadmin'))
+  with check (current_role_name() in ('admin', 'superadmin'));
 
 -- ---------- ALARMS ----------
 -- อ่านได้ทุกคนที่ login / เพิ่มและแก้ได้เฉพาะ admin และ technician
@@ -139,11 +139,11 @@ create policy "authenticated read alarms"
 
 create policy "staff insert alarms"
   on alarms for insert
-  with check (current_role_name() in ('admin', 'technician'));
+  with check (current_role_name() in ('admin', 'technician', 'superadmin'));
 
 create policy "staff update alarms"
   on alarms for update
-  using (current_role_name() in ('admin', 'technician'));
+  using (current_role_name() in ('admin', 'technician', 'superadmin'));
 
 -- ---------- MAINTENANCE RECORDS ----------
 create policy "authenticated read mnt"
@@ -152,11 +152,11 @@ create policy "authenticated read mnt"
 
 create policy "staff insert mnt"
   on maintenance_records for insert
-  with check (current_role_name() in ('admin', 'technician'));
+  with check (current_role_name() in ('admin', 'technician', 'superadmin'));
 
 create policy "staff update mnt"
   on maintenance_records for update
-  using (current_role_name() in ('admin', 'technician'));
+  using (current_role_name() in ('admin', 'technician', 'superadmin'));
 
 
 -- =====================================================================

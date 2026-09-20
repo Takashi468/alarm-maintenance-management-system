@@ -22,7 +22,7 @@ export default async function SimulatorPage() {
     .eq("id", user.id)
     .maybeSingle()
 
-  if (profile?.role !== "admin") redirect("/dashboard")
+  if (profile?.role !== "admin" && profile?.role !== "superadmin") redirect("/dashboard")
 
   let machines: Awaited<ReturnType<typeof getMachines>>
   try {
