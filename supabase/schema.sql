@@ -217,11 +217,8 @@ alter default privileges in schema public
 
 
 -- =====================================================================
--- 8. SEED DATA (ตัวอย่าง - ใช้หลังสร้าง user ใน Authentication แล้ว)
+-- 8. SEED DATA (ข้อมูลตัวอย่าง)
 -- =====================================================================
 -- สร้าง user ใน Supabase Dashboard > Authentication > Users ก่อน
--- แล้วรัน insert profiles โดยดึง id จาก email
---
--- insert into profiles (id, full_name, role) values
---   ((select id from auth.users where email = 'admin@test.com'), 'Admin User', 'admin'),
---   ((select id from auth.users where email = 'tech@test.com'),  'Tech User',  'technician');
+-- (trigger on_auth_user_created จะสร้าง profiles ให้อัตโนมัติ role = technician)
+-- แล้วรันไฟล์ supabase/seed_mock_data.sql เพื่อเพิ่มข้อมูลตัวอย่าง Machines / Alarms / Maintenance
