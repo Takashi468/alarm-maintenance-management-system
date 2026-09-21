@@ -34,6 +34,8 @@
 | role | enum | `admin` \| `technician` \| `viewer` \| `superadmin` |
 | created_at | timestamptz | — |
 
+> Row ถูกสร้างอัตโนมัติโดย trigger `on_auth_user_created` เมื่อมี user ใหม่ใน `auth.users` (default role = `technician` — สิทธิ์ต่ำสุดที่ใช้งานได้จริง ป้องกัน privilege escalation โดยไม่ตั้งใจ) Admin ตั้ง role ให้เองผ่านหน้า /users
+
 ### machines
 | คอลัมน์ | ประเภท | หมายเหตุ |
 | --- | --- | --- |

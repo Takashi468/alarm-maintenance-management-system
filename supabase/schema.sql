@@ -3,7 +3,7 @@
 -- Supabase Database Schema
 -- =====================================================================
 -- รันไฟล์นี้ใน Supabase SQL Editor ตามลำดับจากบนลงล่าง
--- ประกอบด้วย: Enum Types, Tables, Indexes, RLS Helper, RLS Policies
+-- ประกอบด้วย: Enum Types, Tables, Indexes, RLS Helper, RLS Policies, Auto-Profile Trigger
 -- =====================================================================
 
 
@@ -160,7 +160,53 @@ create policy "staff update mnt"
 
 
 -- =====================================================================
--- 6. GRANTS (จำเป็นสำหรับ Data API)
+-- 6. AUTO-PROFILE TRIGGER
+-- =====================================================================
+-- สร้าง row ใน profiles อัตโนมัติเมื่อมี user ใหม่ใน auth.users
+-- (ไม่ว่าจะสร้างผ่าน Dashboard, Admin API หรือ signup ในอนาคต)
+--
+-- ทำไม default role = 'technician':
+--   * เป็นสิทธิ์ต่ำสุดที่ "ใช้งานได้จริง" — login แล้วใช้ Dashboard / Alarms / Maintenance ได้
+--     แต่ยังจัดการ machines / simulator / users ไม่ได้
+--   * ป้องกัน privilege escalation โดยไม่ตั้งใจ — user ใหม่ไม่ได้สิทธิ์ admin มาโดย default
+--   * Admin ต้องเข้าไปตั้ง role ให้เองทีหลังผ่านหน้า /users ตามความเหมาะสม
+
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.profiles (id, full_name, role)
+  values (
+    new.id,
+    coalesce(
+      nullif(new.raw_user_meta_data->>'full_name', ''),
+      split_part(coalesce(new.email, 'user'), '@', 1)
+    ),
+    'technician'
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- Backfill: สร้าง profile ให้ user เดิมที่ยังไม่มี (no-op ถ้าครบแล้ว)
+insert into public.profiles (id, full_name, role)
+select u.id, split_part(u.email, '@', 1), 'technician'
+from auth.users u
+left join public.profiles p on p.id = u.id
+where p.id is null;
+
+
+-- =====================================================================
+-- 7. GRANTS (จำเป็นสำหรับ Data API)
 -- =====================================================================
 grant usage on schema public to anon, authenticated, service_role;
 grant select, insert, update, delete on all tables in schema public
@@ -171,7 +217,7 @@ alter default privileges in schema public
 
 
 -- =====================================================================
--- 7. SEED DATA (ตัวอย่าง - ใช้หลังสร้าง user ใน Authentication แล้ว)
+-- 8. SEED DATA (ตัวอย่าง - ใช้หลังสร้าง user ใน Authentication แล้ว)
 -- =====================================================================
 -- สร้าง user ใน Supabase Dashboard > Authentication > Users ก่อน
 -- แล้วรัน insert profiles โดยดึง id จาก email
