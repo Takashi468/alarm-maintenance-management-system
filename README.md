@@ -44,7 +44,7 @@
 | machine_name | text | — |
 | machine_type | text | — |
 | location | text | — |
-| status | enum | `Running` \| `Stop` \| `Maintenance` \| `Alarm` |
+| status | enum | `Running` \| `Stop` \| `Alarm` \| `Maintenance` |
 | deleted_at | timestamptz (null) | soft delete |
 | last_updated_at / created_at | timestamptz | — |
 
@@ -70,7 +70,7 @@
 | technician_id | uuid (FK → profiles.id, null) | ช่างผู้รับผิดชอบ |
 | problem | text | ปัญหาที่พบ |
 | action_taken | text (null) | การแก้ไข (กรอกตอน Done) |
-| maintained_at | timestamptz | เวลาเข้าซ่อม |
+| maintained_at | date | วันที่เข้าซ่อม |
 | status | enum | `Pending` \| `In Progress` \| `Done` |
 | created_at | timestamptz | — |
 
