@@ -20,7 +20,7 @@
 | --- | --- |
 | Frontend / Backend | Next.js 14 (App Router), TypeScript, Tailwind CSS |
 | Database & Auth | Supabase (PostgreSQL + Auth + Row Level Security) |
-| CI/CD | GitHub Actions (lint → build → test) |
+| CI/CD | GitHub Actions (build → lint → test) |
 | Deployment | Vercel |
 | Package Manager | bun |
 
@@ -103,8 +103,8 @@ SQL schema ฉบับเต็ม (enum, table, index, RLS policy) อยู�
 ## 5. วิธีรันโปรเจกต์
 
 ```bash
-git clone https://github.com/<owner>/amms.git
-cd amms
+git clone https://github.com/Takashi468/alarm-maintenance-management-system.git
+cd alarm-maintenance-management-system
 bun install
 cp .env.local.example .env.local
 # แก้ไขค่าใน .env.local:
