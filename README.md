@@ -14,7 +14,7 @@
 - **Role-based Access (Admin / Technician)** — ควบคุมสิทธิ์ตามบทบาทด้วย Middleware + Server Action + RLS
 - **PLC Mock Simulator** — จำลองการเปลี่ยนสถานะเครื่องจักรจากฝั่ง OT (ดูหัวข้อที่ 8)
 
-## 3. เทคโนโลยีที่ใช้
+## 3. เทคโนโลยีที่ใช้ (Technology used)
 
 | หมวด | เทคโนโลยี |
 | --- | --- |
@@ -24,7 +24,7 @@
 | Deployment | Vercel |
 | Package Manager | bun |
 
-## 4. โครงสร้างฐานข้อมูล
+## 4. โครงสร้างฐานข้อมูล (Database Structure)
 
 ### profiles
 | คอลัมน์ | ประเภท | หมายเหตุ |
